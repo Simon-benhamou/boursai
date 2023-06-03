@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchFundamentalAnalysis } from '../../actions/analysisActions';
+import Spinner from '../../utils/Spinner'
+import { Carousel, Card, Row, Col ,Accordion, Button } from 'react-bootstrap';
 
 export default function FundamentalAnalysis() {
   const dispatch = useDispatch();
@@ -10,16 +12,19 @@ export default function FundamentalAnalysis() {
     //dispatch(fetchFundamentalAnalysis());
   }, [dispatch]);
 
-  if (!fundamentalAnalysis) {
-    return <div>Loading...</div>;
-  }
+  // if (!fundamentalAnalysis) {
+  //   return <Spinner/>;
+  // }
 
   return (
-    <div>
-      <h2>Fundamental Analysis</h2>
-      <p>Grade: {fundamentalAnalysis?.grade}</p>
+    <Accordion.Item eventKey="1">
+    <Accordion.Header>Fundamental Analysis</Accordion.Header>
+    <Accordion.Body>
+    <p>Grade: {fundamentalAnalysis?.grade}</p>
       <p>Score: {fundamentalAnalysis?.score}</p>
-      {/* Display chart here */}
-    </div>
+    </Accordion.Body>
+  </Accordion.Item>
+   
+  
   );
 }

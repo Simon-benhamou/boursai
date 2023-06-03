@@ -3,14 +3,18 @@ import styled from 'styled-components';
 import {debounce} from 'lodash';
 import  axios from 'axios';
 import stockApi from '../../services/stockApi';
+import Spinner from '../../utils/Spinner';
 
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const handleStockSearch = async () => {
+    setLoading(true);
+    setSuggestions([]);
       const data =  await stockApi.fetchDetails(query);
+      setLoading(false);
        if(data) return  setSuggestions(data?.quotes?.map((quote) => quote.symbol));
         return setSuggestions([]);       
     }
@@ -27,9 +31,12 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <Container>
-      <SearchInput type="text" placeholder="Search for a stock" value={query} onChange={handleInputChange} />
-      <Button onClick={handleStockSearch}> Search</Button>
+    <div>
+      
+      <Container class="container d-flex">
+        <input className="input" name="text"value={query}  onChange={handleInputChange}  type="text" required="" placeholder='Search for a stock'/>
+        <Button className='mt-3' onClick={handleStockSearch}> Search</Button>
+      </Container>
       {suggestions?.length > 0 && (
         <SuggestionsList>
           {suggestions.map((symbol) => (
@@ -39,59 +46,119 @@ const SearchBar = ({ onSearch }) => {
           ))}
         </SuggestionsList>
       )}
-    </Container>
+      {loading && <Spinner />}
+    </div>
   );
 };
 
 const Container = styled.div`
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
   position: relative;
+
+
+.label {
+  font-size: 15px;
+  padding-left: 10px;
+  position: absolute;
+  top: 13px;
+  transition: 0.3s;
+  pointer-events: none;
+}
+
+.input {
+  width: 400px;
+  height: 45px;
+  border: none;
+  outline: none;
+  padding: 0px 7px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 15px;
+  background-color: transparent;
+  box-shadow: 3px 3px 10px rgba(0,0,0,1),
+  -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
+
+.input:focus {
+  border: 2px solid transparent;
+  color: #fff;
+  box-shadow: 3px 3px 10px rgba(0,0,0,1),
+  -1px -1px 6px rgba(255, 255, 255, 0.4),
+  inset 3px 3px 10px rgba(0,0,0,1),
+  inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
+
+.input:valid ~ .label,
+.input:focus ~ .label {
+  transition: 0.3s;
+  padding-left: 2px;
+  transform: translateY(-35px);
+}
+
+.input:valid,
+.input:focus {
+  box-shadow: 3px 3px 10px rgba(0,0,0,1),
+  -1px -1px 6px rgba(255, 255, 255, 0.4),
+  inset 3px 3px 10px rgba(0,0,0,1),
+  inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
 `;
 
-const SearchInput = styled.input`
-  width: 100%;
-  height: 44px;
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  border-radius: 24px;
-  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
-  outline: none;
-`;
 
 const SuggestionsList = styled.ul`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+
   z-index: 1;
   padding: 0;
   margin: 0;
+  width: 100%;
+  color: #ffff;
   list-style: none;
-  background-color: #fff;
-  border: 1px solid #ddd;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 `;
 
 const SuggestionItem = styled.li`
   padding: 10px;
   font-size: 16px;
-  color: #333;
+  color: #ffff;
   cursor: pointer;
 
   &:hover {
-    background-color: #f2f2f2;
+    color: fuchsia;
   }
 `;
  //write a button with nice styling
 const Button = styled.button`
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 24px;
-    background-color: #f2f2f2;
-    color: #5f6368;
-    cursor: pointer;
+  
+ font-weight: bold;
+ letter-spacing: 0.1em;
+ border: none;
+ border-radius: 1.1em;
+ background-color: #212121;
+ color: white;
+ padding: 1em 2em;
+ transition: box-shadow ease-in-out 0.3s,
+             background-color ease-in-out 0.1s,
+             letter-spacing ease-in-out 0.1s,
+             transform ease-in-out 0.1s;
+ /* box-shadow: 13px 13px 10px #1c1c1c,
+             -13px -13px 10px #262626; */
+
+
+:hover {
+ box-shadow: 16px 16px 33px #121212,
+                   -16px -16px 33px #303030;
+}
+
+:active {
+ box-shadow: 16px 16px 33px #121212,
+                   -16px -16px 33px #303030,
+ fuchsia 0px 0px 30px 5px;
+ background-color: fuchsia;
+ transform: scale(0.95);
+}
+
     `;
 export default SearchBar;

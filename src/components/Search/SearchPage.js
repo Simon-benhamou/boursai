@@ -30,6 +30,8 @@ const LogoText = styled.h1`
   font-size: 52px;
   font-weight: bold;
   margin-left: 10px;
+  color: rgba(255, 255, 255, 0.8);
+
 `;
 
 const Container = styled.div`
@@ -37,6 +39,8 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding-top: 100px;
+  background-color: #333333;
+  height: 100vh;
 `;
 
 const Logo = styled.img`

@@ -51,3 +51,12 @@ export const fetchTechnicalAnalysis = () => async (dispatch) => {
   //   dispatch({ type: "FETCH_TECHNICAL_ANALYSIS_FAILURE", payload: error.message });
   // }
 };
+
+export const fetchChartData = (symbol,interval,range) => async (dispatch) => {
+  try {
+    const res = await stockApi.fetchChartData(symbol,interval,range);
+    dispatch({ type: "FETCH_CHART_DATA_SUCCESS", payload: res });
+  } catch (error) {
+    dispatch({ type: "FETCH_CHART_DATA_FAILURE", payload: error.message });
+  }
+}

@@ -37,6 +37,18 @@ const initialState = {
             sentimentAnalysis: null,
             error: action.payload,
           };
+        case "FETCH_CHART_DATA_SUCCESS":
+          return {
+            ...state,
+            chartData: action.payload,
+            error: null,
+          };
+        case "FETCH_CHART_DATA_FAILURE":
+          return {
+            ...state,
+            chartData: null,
+            error: action.payload,
+          };
       default:
         return state;
     }

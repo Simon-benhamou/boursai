@@ -7,7 +7,9 @@ const api = {
   autocomplete: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/auto-complete',
   news: 'https://apidojo-yahoo-finance-v1.p.rapidapi.com/stock/v2/get-newslist',
   headlines: 'https://finance.yahoo.com/rss/headline',
-  everyNews: 'https://newsapi.org/v2/everything'
+  everyNews: 'https://newsapi.org/v2/everything',
+  serverAnalaysis:'http://localhost:8085/api/sentimentsAnalysis',
+  serverGetChart : 'http://localhost:8085/api/getChartData'
 }
 
 const options = {
@@ -49,23 +51,10 @@ const fetchDetails = async (symbol) => {
 const fetchSentimentAnalysis =  async (symbol) => {
   openai.apiKey = process.env.REACT_APP_OPENAI_API_KEY;
   try {
-    const params = {...options,params:{...options.params,q:symbol,apiKey:process.env.REACT_APP_NEWS_API_KEY}, url:api.everyNews}
+    const params = {method:"POST",params:{query:symbol}, url:api.serverAnalaysis+`/${symbol}`}
     const response = await axios.request(params);
-    const xml = new window.DOMParser().parseFromString(response.data, 'text/xml');
-    const newsArticles = Array.from(xml.querySelectorAll('item')).map((item) => item.querySelector('description').textContent);
-    const newsText = newsArticles.join(' ');
-
-    const sentimentAnalysis = await openai.analyze({
-      model: 'text-davinci-002',
-      prompt: `Sentiment analysis of news articles related to ${symbol}:\n\n${newsText}`,
-      temperature: 0.5,
-      maxTokens: 60,
-      n: 1,
-      stop: '\n',
-    });
-
-    return sentimentAnalysis.choices[0].text.trim();
-
+    const data = response.data;
+    return data;
 }
   catch (error) {
     console.error(error);
@@ -73,8 +62,24 @@ const fetchSentimentAnalysis =  async (symbol) => {
   }
 }
 
+const fetchChartData = async (symbol,interval,range) => {
+  try {
+  const params = {...options, url:api.serverGetChart+`/${symbol}/${interval}/${range}`}
+  const response = await axios.request(params);
+  const historicalData = response.data.chart.result[0].indicators.quote[0].close.map((value, index) => ({
+    date: new Date(response.data.chart.result[0].timestamp[index] * 1000).toLocaleDateString(),
+    close: value
+  }));
+  return historicalData;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export default {
   fetchStockData,
   fetchDetails,
-  fetchSentimentAnalysis
+  fetchSentimentAnalysis,
+  fetchChartData
 };

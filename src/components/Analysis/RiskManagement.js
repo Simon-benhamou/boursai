@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchRiskAnalysis } from '../../actions/analysisActions';
+import Spinner from '../../utils/Spinner'
+import { Carousel, Card, Row, Col ,Accordion, Button } from 'react-bootstrap';
 
 export default function RiskManagement() {
   const dispatch = useDispatch();
@@ -10,16 +12,17 @@ export default function RiskManagement() {
     //dispatch(fetchRiskAnalysis());
   }, [dispatch]);
 
-  if (!riskAnalysis) {
-    return <div>Loading...</div>;
-  }
+  // if (!riskAnalysis) {
+  //   return <Spinner/>;
+  // }
 
   return (
-    <div>
-      <h2>Risk Analysis</h2>
-      <p>Grade: {riskAnalysis.grade}</p>
-      <p>Score: {riskAnalysis.score}</p>
-      {/* Display chart here */}
-    </div>
+     <Accordion.Item eventKey="3">
+     <Accordion.Header>Risk Analysis</Accordion.Header>
+     <Accordion.Body>
+     <p>Grade: {riskAnalysis?.grade}</p>
+      <p>Score: {riskAnalysis?.score}</p>
+     </Accordion.Body>
+   </Accordion.Item>
   );
 }
