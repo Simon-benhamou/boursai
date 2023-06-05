@@ -33,7 +33,7 @@ const SearchBar = ({ onSearch }) => {
   return (
     <div>
       
-      <Container class="container d-flex">
+      <Container className="container d-flex">
         <input className="input" name="text"value={query}  onChange={handleInputChange}  type="text" required="" placeholder='Search for a stock'/>
         <Button className='mt-3' onClick={handleStockSearch}> Search</Button>
       </Container>

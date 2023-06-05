@@ -60,3 +60,13 @@ export const fetchChartData = (symbol,interval,range) => async (dispatch) => {
     dispatch({ type: "FETCH_CHART_DATA_FAILURE", payload: error.message });
   }
 }
+export const askGPT = (prompt,model,format) => async (dispatch) => {
+  try {
+    const res = await stockApi.askGPT(prompt,model,format);
+
+    dispatch({ type: "ASK_GPT_SUCCESS", payload: res });
+    return res;
+  } catch (error) {
+    dispatch({ type: "ASK_GPT_FAILURE", payload: error.message });
+  }
+}

@@ -49,6 +49,12 @@ const initialState = {
             chartData: null,
             error: action.payload,
           };
+         case "ASK_GPT_SUCCESS":
+          return {
+            ...state,
+            gptResponse: action.payload,
+            error: null,
+          }; 
       default:
         return state;
     }
